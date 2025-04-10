@@ -141,5 +141,7 @@ def get_result():
     return render_template('result.html', error="결과를 가져올 수 없습니다.")
 
 if __name__ == '__main__':
+    import os
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=False)
+
