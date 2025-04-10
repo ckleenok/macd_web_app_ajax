@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>MACD 분석기 - 티커 업로드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 16px;
+      padding: 1em;
+    }
+    input[type="file"], button {
+      font-size: 16px;
+      padding: 0.5em;
+      margin-top: 1em;
+    }
+    #progress {
+      margin-top: 1em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>📤 티커 목록 파일 업로드</h2>
+  <form id="upload-form">
+    <input type="file" name="file" accept=".txt" required>
+    <br>
+    <button type="submit">분석 시작</button>
+  </form>
+  <div id="progress">🔄 분석 대기 중...</div>
+
+  <script>
+    const form = document.getElementById('upload-form');
+    const progressDiv = document.getElementById('progress');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fileInput = form.querySelector('input[type="file"]');
+      const file = fileInput.files[0];
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch('/analyze', {
+        method: 'POST',
+        body: formData
+      }).then(() => {
+        const interval = setInterval(() => {
+          fetch('/progress')
+            .then(res => res.json())
+            .then(data => {
+              if (data.done && data.total > 0) {
+                clearInterval(interval);
+                progressDiv.innerHTML = '✅ 분석 완료! 결과 페이지로 이동합니다...';
+                setTimeout(() => window.location.href = '/result', 2000);
+              } else {
+                progressDiv.innerHTML = `📈 진행 중: (${data.current}/${data.total})`;
+              }
+            });
+        }, 1000);
+      });
+    });
+  </script>
+</body>
+</html>

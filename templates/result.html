@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>📊 MACD 분석 결과</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 16px;
+      padding: 1em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h2>📊 MACD 분석 결과</h2>
+  {% if error %}
+    <p style="color:red;">{{ error }}</p>
+  {% else %}
+    {{ table|safe }}
+  {% endif %}
+  <br>
+  <a href="/">◀ 돌아가기</a>
+</body>
+</html>
