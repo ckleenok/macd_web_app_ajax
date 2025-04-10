@@ -1,3 +1,4 @@
 flask
 pandas
-yahooquery
+requests
+beautifulsoup4
