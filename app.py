@@ -3,6 +3,7 @@ import pandas as pd
 import threading
 import requests
 from bs4 import BeautifulSoup
+import os
 
 app = Flask(__name__)
 
@@ -12,7 +13,7 @@ progress = {
     "done": False
 }
 
-result_df = None  # <- 전역 변수 초기화
+result_df = None  # 전역 결과 변수 초기화
 
 def get_company_name_naver(ticker):
     try:
@@ -55,8 +56,8 @@ def get_stock_data_naver(ticker):
 
 def run_analysis(tickers):
     global result_df
-    result_df = None  # 매번 초기화
-    progress["done"] = False  # 분석 완료 플래그 초기화
+    result_df = None
+    progress["done"] = False
 
     results = []
     date_columns = []
@@ -105,7 +106,7 @@ def run_analysis(tickers):
     latest_date = date_columns[-1]
     df.sort_values(by=latest_date, ascending=True, inplace=True)
     result_df = df
-    progress["done"] = True  # 분석 완료 표시
+    progress["done"] = True
     return df, date_columns
 
 @app.route('/', methods=['GET'])
@@ -140,4 +141,5 @@ def get_result():
     return render_template('result.html', error="결과를 가져올 수 없습니다.")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=True)
